@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pokédex</title>
+  <style>
+    /* Add some basic styling */
+    .pokemon-card {
+      display: inline-block;
+      width: 200px;
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .pokemon-card img {
+      max-width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pokédex</h1>
+
+  <div>
+    <input type="text" id="search-input" placeholder="Search Pokémon">
+    <button onclick="searchPokemon()">Search</button>
+  </div>
+
+  <div id="pokemon-list"></div>
+
+  <script>
+    // Frontend code to fetch and display data
+
+    // Function to make API requests
+    function makeRequest(url, callback) {
+      fetch(url)
+        .then(response => response.json())
+        .then(data => callback(data));
+    }
+
+    // Display a list of Pokémon
+    function displayPokemonList(pokemonList) {
+      const listContainer = document.getElementById('pokemon-list');
+
+      listContainer.innerHTML = '';
+
+      pokemonList.results.forEach(pokemon => {
+        const pokemonCard = document.createElement('div');
+        pokemonCard.className = 'pokemon-card';
+
+        const name = document.createElement('p');
+        name.textContent = pokemon.name;
+
+        pokemonCard.appendChild(name);
+        listContainer.appendChild(pokemonCard);
+      });
+    }
+
+    // Example function to get and display details of a Pokémon
+    function displayPokemonDetails(pokemonDetails) {
+      console.log(pokemonDetails);
+    }
+
+    // Example usage: Fetch details of a specific Pokémon
+    function fetchPokemonDetails(name) {
+      makeRequest(`index.php?name=${name}`, displayPokemonDetails);
+    }
+
+    // Search for a Pokémon
+    function searchPokemon() {
+      const searchInput = document.getElementById('search-input');
+      const pokemonName = searchInput.value.toLowerCase().trim();
+
+      if (pokemonName === '') {
+        // If search input is empty, fetch the entire list
+        makeRequest('index.php?list', displayPokemonList);
+      } else {
+        // Fetch details of the specified Pokémon
+        fetchPokemonDetails(pokemonName);
+      }
+    }
+
+    // Initial fetch to populate the list
+    makeRequest('index.php?list', displayPokemonList);
+  </script>
+</body>
+</html>
