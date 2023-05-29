@@ -13,7 +13,7 @@ function makeRequest($url) {
 
 // Get a list of Pokémon from the API
 function getPokemonList() {
-  $url = 'https://pokeapi.co/api/v2/pokemon?limit=20'; // Limiting to 20 for simplicity
+  $url = 'https://pokeapi.co/api/v2/pokemon?limit=200'; // Limiting to 20 for simplicity
   return makeRequest($url);
 }
 
