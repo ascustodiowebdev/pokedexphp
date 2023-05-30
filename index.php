@@ -12,8 +12,8 @@ function makeRequest($url) {
 }
 
 // Get a list of Pokémon from the API
-function getPokemonList() {
-  $url = 'https://pokeapi.co/api/v2/pokemon?limit=150'; // Limiting to 150 for simplicity
+function getPokemonList($offset, $limit) {
+  $url = "https://pokeapi.co/api/v2/pokemon?offset={$offset}&limit={$limit}";
   return makeRequest($url);
 }
 
@@ -25,7 +25,9 @@ function getPokemonDetails($pokemonName) {
 
 // Example API endpoint for getting a Pokémon list
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['list'])) {
-  $pokemonList = getPokemonList();
+  $offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
+  $limit = isset($_GET['limit']) ? $_GET['limit'] : 20;
+  $pokemonList = getPokemonList($offset, $limit);
   echo json_encode($pokemonList);
 }
 
