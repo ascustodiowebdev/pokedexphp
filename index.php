@@ -19,7 +19,13 @@ function getPokemonList($offset, $limit) {
 
 // Get details of a specific Pokémon
 function getPokemonDetails($pokemonName) {
-  $url = 'https://pokeapi.co/api/v2/pokemon/' . $pokemonName;
+  // First, get the Pokémon ID using the name
+  $pokemonUrl = "https://pokeapi.co/api/v2/pokemon/{$pokemonName}";
+  $pokemonData = makeRequest($pokemonUrl);
+  $pokemonId = $pokemonData['id'];
+
+  // Then, fetch the Pokémon details using the ID
+  $url = "https://pokeapi.co/api/v2/pokemon/{$pokemonId}";
   return makeRequest($url);
 }
 
