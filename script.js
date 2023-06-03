@@ -9,6 +9,13 @@ function fetchPokemonList(offset, limit) {
     .then(data => {
       pokemonListData = data.results; // Store the Pokémon list data
 
+      // Sort the Pokémon list by ID in ascending order
+      pokemonListData.sort((a, b) => {
+        const idA = getPokemonIdFromUrl(a.url);
+        const idB = getPokemonIdFromUrl(b.url);
+        return idA - idB;
+      });
+
       // Iterate over each Pokémon and create a div element with its details
       pokemonListData.forEach(pokemon => {
         fetchPokemonDetails(pokemon.name)
@@ -31,6 +38,12 @@ function fetchPokemonList(offset, limit) {
     .catch(error => {
       console.log('Error:', error);
     });
+}
+
+// Helper function to extract Pokémon ID from URL
+function getPokemonIdFromUrl(url) {
+  const parts = url.split('/');
+  return parseInt(parts[parts.length - 2]);
 }
 
 // Function to fetch details of a specific Pokémon
