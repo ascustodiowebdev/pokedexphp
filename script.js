@@ -1,42 +1,19 @@
 let offset = 0;
 const limit = 20;
+let pokemonListData = []; // Store the Pokémon list data
 
 // Function to fetch the list of all Pokémon
 function fetchPokemonList(offset, limit) {
   fetch(`index.php?list&offset=${offset}&limit=${limit}`)
     .then(response => response.json())
     .then(data => {
+      pokemonListData = data.results; // Store the Pokémon list data
+
       // Iterate over each Pokémon and create a div element with its details
-      data.results.forEach(pokemon => {
+      pokemonListData.forEach(pokemon => {
         fetchPokemonDetails(pokemon.name)
           .then(details => {
-            const pokemonDiv = document.createElement('div');
-            pokemonDiv.className = 'pokemon';
-
-            const nameElement = document.createElement('h3');
-            const pokemonId = details.id;
-            nameElement.textContent = `#${pokemonId} - ${pokemon.name}`;
-            pokemonDiv.appendChild(nameElement);
-
-            const imageElement = document.createElement('img');
-            imageElement.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
-            pokemonDiv.appendChild(imageElement);
-
-            const detailsElement = document.createElement('div');
-            detailsElement.className = 'details';
-
-            // Type
-            const typeElement = document.createElement('p');
-            typeElement.textContent = `Type: ${details.types.map(type => type.type.name).join(', ')}`;
-            detailsElement.appendChild(typeElement);
-
-            // Abilities
-            const abilitiesElement = document.createElement('p');
-            abilitiesElement.textContent = `Abilities: ${details.abilities.map(ability => ability.ability.name).join(', ')}`;
-            detailsElement.appendChild(abilitiesElement);
-
-            pokemonDiv.appendChild(detailsElement);
-
+            const pokemonDiv = createPokemonElement(details, pokemon.name);
             document.getElementById('pokemonList').appendChild(pokemonDiv);
           })
           .catch(error => {
@@ -62,54 +39,43 @@ function fetchPokemonDetails(name) {
     .then(response => response.json());
 }
 
-// Function to handle the search button click event
-function searchPokemon() {
-  const searchInput = document.getElementById('searchInput');
-  const pokemonName = searchInput.value.toLowerCase();
+// Function to create a Pokémon div element with details
+function createPokemonElement(details, name) {
+  const pokemonDiv = document.createElement('div');
+  pokemonDiv.className = 'pokemon';
 
-  if (pokemonName.trim() === '') {
-    // If the search input is empty, fetch the list of all Pokémon
-    offset = 0;
-    fetchPokemonList(offset, limit);
-  } else {
-    // If a Pokémon name is entered, fetch the details of that Pokémon
-    fetchPokemonDetails(pokemonName)
-      .then(details => {
-        // Clear the existing Pokémon list
-        document.getElementById('pokemonList').innerHTML = '';
+  const nameElement = document.createElement('h3');
+  const pokemonId = details.id;
+  nameElement.textContent = `#${pokemonId} - ${name}`;
+  pokemonDiv.appendChild(nameElement);
 
-        const pokemonDiv = document.createElement('div');
-        pokemonDiv.className = 'pokemon';
+  const imageElement = document.createElement('img');
+  imageElement.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+  pokemonDiv.appendChild(imageElement);
 
-        const nameElement = document.createElement('h3');
-        nameElement.textContent = details.name;
-        pokemonDiv.appendChild(nameElement);
+  const detailsElement = document.createElement('div');
+  detailsElement.className = 'details';
 
-        const imageElement = document.createElement('img');
-        imageElement.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${details.id}.png`;
-        pokemonDiv.appendChild(imageElement);
+  // Type
+  const typeElement = document.createElement('p');
+  typeElement.textContent = `Type: ${details.types.map(type => type.type.name).join(', ')}`;
+  detailsElement.appendChild(typeElement);
 
-        const detailsElement = document.createElement('div');
-        detailsElement.className = 'details';
+  // Abilities
+  const abilitiesElement = document.createElement('p');
+  abilitiesElement.textContent = `Abilities: ${details.abilities.map(ability => ability.ability.name).join(', ')}`;
+  detailsElement.appendChild(abilitiesElement);
 
-        // Type
-        const typeElement = document.createElement('p');
-        typeElement.textContent = `Type: ${details.types.map(type => type.type.name).join(', ')}`;
-        detailsElement.appendChild(typeElement);
+  pokemonDiv.appendChild(detailsElement);
 
-        // Abilities
-        const abilitiesElement = document.createElement('p');
-        abilitiesElement.textContent = `Abilities: ${details.abilities.map(ability => ability.ability.name).join(', ')}`;
-        detailsElement.appendChild(abilitiesElement);
+  // Add click event listener to the container
+  pokemonDiv.addEventListener('click', () => {
+    const pokemonDetails = JSON.stringify(details);
+    localStorage.setItem('pokemonDetails', pokemonDetails);
+    window.location.href = 'pokemon-details.html';
+  });
 
-        pokemonDiv.appendChild(detailsElement);
-
-        document.getElementById('pokemonList').appendChild(pokemonDiv);
-      })
-      .catch(error => {
-        console.log('Error:', error);
-      });
-  }
+  return pokemonDiv;
 }
 
 // Function to handle the "Load More" button click event

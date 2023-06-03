@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Pokemon Solid', cursive;
+  margin: 20px 0;
+}
+
+.pokemon-details {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.pokemon-details #pokemonImage {
+  display: block;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.pokemon-details #pokemonDetails p {
+  margin-bottom: 10px;
+}

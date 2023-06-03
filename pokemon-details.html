@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css" />
+  <title>Pokémon Details</title>
+</head>
+<body>
+  <div id="pokemonDetails"></div>
+
+  <button id="backButton">Back to Pokémon List</button>
+
+  <script src="script.js"></script>
+  <script>
+    // Function to retrieve and display the Pokémon details from local storage
+    function displayPokemonDetails() {
+      const pokemonDetails = localStorage.getItem('pokemonDetails');
+      if (pokemonDetails) {
+        const details = JSON.parse(pokemonDetails);
+        const pokemonDiv = createPokemonElement(details, details.name);
+        document.getElementById('pokemonDetails').appendChild(pokemonDiv);
+      }
+    }
+
+    // Function to create a Pokémon div element with details
+    function createPokemonElement(details, name) {
+      const pokemonDiv = document.createElement('div');
+      pokemonDiv.className = 'pokemon';
+
+      const nameElement = document.createElement('h2');
+      nameElement.textContent = name;
+      pokemonDiv.appendChild(nameElement);
+
+      const idElement = document.createElement('p');
+      idElement.textContent = `#${details.id}`;
+      pokemonDiv.appendChild(idElement);
+
+      const imageElement = document.createElement('img');
+      imageElement.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${details.id}.png`;
+      imageElement.alt = `${name} Image`;
+      pokemonDiv.appendChild(imageElement);
+
+      const detailsElement = document.createElement('div');
+      detailsElement.className = 'details';
+
+      // Type
+      const typeElement = document.createElement('p');
+      typeElement.textContent = `Type: ${details.types.map(type => type.type.name).join(', ')}`;
+      detailsElement.appendChild(typeElement);
+
+      // Abilities
+      const abilitiesElement = document.createElement('p');
+      abilitiesElement.textContent = `Abilities: ${details.abilities.map(ability => ability.ability.name).join(', ')}`;
+      detailsElement.appendChild(abilitiesElement);
+
+      // Add more details as needed
+
+      pokemonDiv.appendChild(detailsElement);
+
+      return pokemonDiv;
+    }
+
+    // Call the function to display Pokémon details
+    displayPokemonDetails();
+
+    // Add event listener to the "Back to Pokémon List" button
+    document.getElementById('backButton').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
