@@ -18,5 +18,115 @@
     <div class="container" id="pokemonList"></div>
     <button id="loadMoreButton">Load More</button>
     <script src="script.js"></script>
+    <script>
+        let offset = 0;
+        const limit = 20;
+        let pokemonListData = []; // Store the Pokémon list data
+
+        // Function to fetch the list of all Pokémon
+        function fetchPokemonList(offset, limit) {
+            fetch(`index.php?list&offset=${offset}&limit=${limit}`)
+                .then(response => response.json())
+                .then(data => {
+                    pokemonListData = data.results; // Store the Pokémon list data
+
+                    // Create an array to hold all the promises for fetching Pokémon details
+                    const fetchPromises = [];
+
+                    // Iterate over each Pokémon and create a promise for fetching its details
+                    pokemonListData.forEach(pokemon => {
+                        const promise = fetchPokemonDetails(pokemon.name);
+                        fetchPromises.push(promise);
+                    });
+
+                    // Use Promise.all to wait for all the fetch promises to resolve
+                    Promise.all(fetchPromises)
+                        .then(pokemonDetailsArray => {
+                            // Iterate over the fetched Pokémon details in the original order
+                            pokemonDetailsArray.forEach((details, index) => {
+                                const pokemonDiv = createPokemonElement(details, pokemonListData[index].name);
+                                document.getElementById('pokemonList').appendChild(pokemonDiv);
+                            });
+
+                            // Check if there are more Pokémon to load
+                            if (data.next !== null) {
+                                showLoadMoreButton();
+                            } else {
+                                hideLoadMoreButton();
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error:', error);
+                        });
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+        }
+
+        // Function to fetch details of a specific Pokémon
+        function fetchPokemonDetails(name) {
+            return fetch(`index.php?name=${name}`)
+                .then(response => response.json());
+        }
+
+        // Function to create a Pokémon div element with details
+        function createPokemonElement(details, name) {
+            const pokemonDiv = document.createElement('div');
+            pokemonDiv.className = 'pokemon';
+
+            const nameElement = document.createElement('h3');
+            const pokemonId = details.id;
+            nameElement.textContent = `#${pokemonId} - ${name}`;
+            pokemonDiv.appendChild(nameElement);
+
+            const imageElement = document.createElement('img');
+            imageElement.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+            pokemonDiv.appendChild(imageElement);
+
+            const detailsElement = document.createElement('div');
+            detailsElement.className = 'details';
+
+            // Type
+            const typeElement = document.createElement('p');
+            typeElement.textContent = `Type: ${details.types.map(type => type.type.name).join(', ')}`;
+            detailsElement.appendChild(typeElement);
+
+            pokemonDiv.appendChild(detailsElement);
+
+            // Add click event listener to the container
+            pokemonDiv.addEventListener('click', () => {
+                const pokemonDetails = JSON.stringify(details);
+                localStorage.setItem('pokemonDetails', pokemonDetails);
+                window.location.href = 'pokemon-details.html';
+            });
+
+            return pokemonDiv;
+        }
+
+        // Function to handle the "Load More" button click event
+        function loadMorePokemon() {
+            offset += limit;
+            fetchPokemonList(offset, limit);
+        }
+
+        // Function to show the "Load More" button
+        function showLoadMoreButton() {
+            const loadMoreButton = document.getElementById('loadMoreButton');
+            loadMoreButton.style.display = 'block';
+        }
+
+        // Function to hide the "Load More" button
+        function hideLoadMoreButton() {
+            const loadMoreButton = document.getElementById('loadMoreButton');
+            loadMoreButton.style.display = 'none';
+        }
+
+        // Call the fetchPokemonList function with an initial offset of 0 to load the first batch of Pokémon
+        fetchPokemonList(offset, limit);
+
+        // Add event listener to the "Load More" button
+        document.getElementById('loadMoreButton').addEventListener('click', loadMorePokemon);
+    </script>
 </body>
 </html>
