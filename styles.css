@@ -3,12 +3,12 @@ body {
   background-image: url("unnamed.png");
   background-size: cover;
   background-position: center;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -31,11 +31,19 @@ h1 {
 .pokemon {
   height: 240px;
   width: 240px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
   padding: 20px;
   text-align: center;
   border-radius: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.5);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.pokemon:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.8);
+  transform: scale(1.05);
 }
 
 h3 {
@@ -59,9 +67,22 @@ p {
 }
 
 #loadMoreButton {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  background-color: #f44336;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#loadMoreButton:hover {
+  background-color: #c62828;
 }
 
 .search {
@@ -98,15 +119,33 @@ p {
   margin-top: 20px;
 }
 
-/* Pokémon details page styles */
-
 #pokemonDetails {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  border-radius: 10px;
   padding: 20px;
   text-align: center;
   margin: 20px auto;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  max-width: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#pokemonDetails h3 {
+  margin-top: 0;
+}
+
+#pokemonDetails img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+#pokemonDetails .details {
+  margin-top: 10px;
 }
 
 #backButton {
@@ -125,4 +164,8 @@ p {
 
 #backButton:hover {
   background-color: #45a049;
+}
+
+.navtitle {
+  margin: 25px;
 }
