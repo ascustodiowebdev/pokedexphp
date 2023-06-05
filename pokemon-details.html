@@ -11,6 +11,8 @@
 
   <button id="backButton">Back to Pokémon List</button>
 
+  <audio id="pokemonSound" src=""></audio>
+
   <script src="script.js"></script>
   <script>
     // Function to retrieve and display the Pokémon details from local storage
@@ -20,6 +22,11 @@
         const details = JSON.parse(pokemonDetails);
         const pokemonDiv = createPokemonElement(details, details.name);
         document.getElementById('pokemonDetails').appendChild(pokemonDiv);
+
+        const soundElement = document.getElementById('pokemonSound');
+        const soundUrl = `http://localhost:3000/pokesound.php?pokemon=${details.name}`;
+        soundElement.src = soundUrl;
+        soundElement.play();
       }
     }
 
