@@ -24,7 +24,7 @@
         document.getElementById('pokemonDetails').appendChild(pokemonDiv);
 
         const soundElement = document.getElementById('pokemonSound');
-        const soundUrl = `https://pokesoundapi.herokuapp.com/cries/${details.name.toLowerCase()}.mp3`;
+        const soundUrl = `https://pokesoundapi-a1119c903fa9.herokuapp.com/cries/${details.name.toLowerCase()}.mp3`;
         soundElement.src = soundUrl;
         soundElement.play();
       }
